@@ -20,7 +20,7 @@ export const RoomPage = () => {
     }
 
     useEffect(() => {
-        reloadRoomDetails()
+        void reloadRoomDetails()
     }, [])
 
     const onSubmit = async (event: FormEvent) => {
@@ -89,7 +89,7 @@ export const RoomPage = () => {
                                         max={10}
                                         className="rounded-3xl border-1 border-gray-300 w-full h-10 px-4 mt-2"
                                         value={guestsCount}
-                                        onChange={(e) => setGuestsCount(parseInt(e.target.value))}
+                                        onChange={(e) => setGuestsCount(Number.parseInt(e.target.value, 10))}
                                         required />
                                 </div>
                             </div>

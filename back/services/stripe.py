@@ -1,6 +1,5 @@
 import os
 import stripe
-import requests
 
 def create_checkout(reference, name, unit_price, quantity, confirmation_secret):
     """
@@ -29,8 +28,15 @@ def create_checkout(reference, name, unit_price, quantity, confirmation_secret):
     )
 
 def get_checkout_lines(checkout_session_id):
-    url = f"https://api.stripe.com/v1/checkout/sessions/{checkout_session_id}/line_items"
+    stripe.api_key = os.getenv('STRIPE_API_KEY')
+    # Le SDK encode l'ID ; on n'assemble plus l'URL à la main
+    lines = stripe.checkout.Session.list_line_items(checkout_session_id)
+    return [
+        {"description": l.description, "quantity": l.quantity, "amount_total": l.amount_total}
+        for l in lines.data
+    ]
 
-    session = requests.Session()
-    session.auth = (os.getenv('STRIPE_API_KEY'), "")
-    return session.get(url).json()["data"]
+def is_checkout_paid(checkout_session_id) -> bool:
+    stripe.api_key = os.getenv('STRIPE_API_KEY')
+    session = stripe.checkout.Session.retrieve(checkout_session_id)
+    return session.payment_status == "paid"

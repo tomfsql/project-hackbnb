@@ -14,7 +14,7 @@ export const BookingSearchPage = () => {
 
         try {
             await apiBookingDetails(`${bookingReference}`)
-            navigate('./' + bookingReference)
+            void navigate('./' + bookingReference)
         } catch (error) {
             alert("Référence de réservation invalide")
         }
@@ -34,7 +34,6 @@ export const BookingSearchPage = () => {
                     </div>
                     <input
                         type="text"
-                        autoFocus
                         className="rounded-3xl border-1 border-gray-300 w-full h-10 px-4 mt-2"
                         value={bookingReference}
                         onChange={(e) => setBookingReference(e.target.value)}

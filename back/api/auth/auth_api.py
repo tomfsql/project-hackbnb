@@ -13,9 +13,9 @@ def login():
         return {'error': 'Missing password'}, 400
 
     # Check if user exists
-    user: User = User.query.where(User.email == request.json["email"]).first()
-    if not user:
-        return {'error': 'User not found'}, 404
+    user = User.query.where(User.email == request.json["email"]).first()
+    if not user or not user.is_valid_password(request.json["password"]):
+        return {'error': 'Invalid credentials'}, 401
     
      # Check if user exists
     if not user.is_valid_password(request.json["password"]):
